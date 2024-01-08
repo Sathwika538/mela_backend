@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 // const dotenv = require("dotenv");
 const path = require("path");
-
+const cors = require("cors");
 //Config       
 if(process.env.NODE_ENV!== "PRODUCTION"){
     require("dotenv").config({path:"backend/config/config.env"});
@@ -16,7 +16,7 @@ app.use(cookieParser());
 app.use(express.json({limit: '50mb', extended: true}));
 app.use(express.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 app.use(fileUpload());
-
+app.use(cors);
 //Route Imports
 const product = require('./routes/productRoute');
 const user = require('./routes/userRoute');
@@ -31,6 +31,7 @@ app.use('/api/v1',payment);
 app.use(express.static(path.join(__dirname,"../front_end/build")));
 
 app.get("*",(req,res) => {
+    res.setHeaders("Access-Control-Allow-Credentials","true");
     res.sendFile(path.resolve(path.join(__dirname,"../front_end/build/index.html")));
 })
 
